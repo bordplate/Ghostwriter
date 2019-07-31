@@ -3,6 +3,9 @@
 {% block pagetitle %}Client List{% endblock %}
 
 {% block content %}
+    <div class="contextual-row">
+        <a href="{% url 'rolodex:client_create' %}" class="btn btn-primary btn-sm">Add New Client</a>
+    </div>
     {% if client_list %}
         <table id="clientTable" class="tablesorter">
             <thead>
@@ -15,7 +18,7 @@
             </thead>
             {% for client in client_list %}
                 <tr>
-                    <td class="clickable"><a href="{{ client.get_absolute_url }}">{{ client.name }}</i></a></td>
+                    <td class="clickable"><a href="{{ client.get_absolute_url }}">{{ client.name }}</a></td>
                     <td>{{ client.short_name }}</td>
                     <td>{{ client.codename }}</td>
                     <td>{{ client.note }}</td>
