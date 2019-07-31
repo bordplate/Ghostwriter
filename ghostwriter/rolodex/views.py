@@ -271,10 +271,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Customize the queryset based on search."""
         queryset = super(ProjectListView, self).get_queryset()
-        messages.success(
-            self.request,
-            'Displaying open projects',
-            extra_tags='alert-success')
+
         return queryset.select_related('project_type', 'client').\
             filter(complete=False).order_by('end_date')
 
