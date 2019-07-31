@@ -133,6 +133,14 @@ input[type="file"] {
   margin: 40px 0;
 }
 
+.avatar-sm[aria-expanded="true"] {
+    background-color: rgba(0,0,0,0) !important;
+}
+
+.avatar-sm:hover {
+    background-color: rgba(0,0,0,0) !important;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLES
 ----------------------------------------------------- */

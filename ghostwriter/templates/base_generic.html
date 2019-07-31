@@ -136,7 +136,7 @@
 
                 <!-- Sidebar Buttons -->
                 {% if user.is_authenticated %}
-                    <a href="{% url 'account_logout' %}" class="button">Logout <i class="fas fa-sign-out-alt"></i></a>
+
                 {% else %}
                     <a href="{% url 'account_login' %}" class="button">Login <i class="fas fa-sign-in-alt"></i></a>
                 {% endif %}
@@ -182,8 +182,16 @@
                                             {% endif %}
                                         </div>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'home:profile' %}"><img style="width: 40px; height: 40px; border-radius: 50%; margin-top: -10px;" class="avatar" src="{{ user.userprofile.avatar_url }}" alt="Avatar"></a>
+                                    <li class="nav-item dropdown">
+                                        <a class="avatar-sm nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img style="width: 40px; height: 40px; border-radius: 50%; margin-top: -10px;" class="avatar" src="{{ user.userprofile.avatar_url }}" alt="Avatar">
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="{% url 'home:profile' %}">Profile</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'account_logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a>
+                                        </div>
                                     </li>
                                 {% else %}
                                     <p>{% block pagetitle %}{% endblock %}</p>
