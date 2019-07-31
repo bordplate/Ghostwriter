@@ -40,11 +40,6 @@
             <!-- Sidebar Holder -->
             {% if user.is_authenticated %}
             <nav id="sidebar">
-                <!-- Sidebar Top Section -->
-                <div class="sidebar-header">
-                    <h3><a href="{% url 'home:dashboard' %}"><img src="{% static 'images/font_ghost.png' %}" alt="SpecterOps" style="width:10%"> Ghostwriter</a></h3>
-                </div>
-
                 <!-- Rolodex Section -->
                 <ul class="list-unstyled components">
                     <p class="sideheader"><i class="fas fa-address-card"></i> Clients & Projects</p>
@@ -155,10 +150,14 @@
                 {% if user.is_authenticated %}
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <button type="button" id="sidebarCollapse" class="navbar-btn" title="Toggle sidebar menu">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </button>
+                    <a class="navbar-brand" href="{% url 'home:dashboard' %}">
+                        <img src="{% static 'images/font_ghost.png' %}" style="filter: invert(100%);" height="20px" width="20px" alt="SpecterOps">
+                        Ghostwriter
+                    </a>
                     <div class="container-fluid">
                         <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fas fa-align-justify"></i>
@@ -208,7 +207,7 @@
             {% endif %}
 
                 <!-- Page Content Goes Here -->
-                <div>
+                <div id="page-content">
                     {% block content %}{% endblock %}
                     {% block pagination %}
                         {% if is_paginated %}
