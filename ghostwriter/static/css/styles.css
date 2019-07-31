@@ -164,7 +164,7 @@ input[type="file"] {
 
 .search input { text-indent: 45px;}
 
-.search .fa-search { 
+.search .fa-search {
     position: absolute;
     top: 10px;
     left: 12.5%;
@@ -625,6 +625,15 @@ thead th.down {
     float: left;
     margin-top: 10px;
     margin-bottom: 10px;
+    width: 100%;
+}
+
+.contextual-row-left {
+    float: left;
+}
+
+.contextual-row-right {
+    float: right;
 }
 
 /* ---------------------------------------------------

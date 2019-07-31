@@ -4,7 +4,22 @@
 
 {% block content %}
     <div class="contextual-row">
-        <a href="{% url 'rolodex:client_create' %}" class="btn btn-primary btn-sm">Add New Client</a>
+        <div class="contextual-row-left">
+            <a href="{% url 'rolodex:client_create' %}" class="btn btn-primary btn-sm">Add New Client</a>
+        </div>
+
+        <div class="contextual-row-right">
+            <!-- Search Section -->
+            <form action="{% url 'rolodex:clients' %}" method="GET" class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><span class="fa fa-search"></span></span>
+                </div>
+                <input type="text" name="client_search" class="form-control form-control-sm" placeholder="Search clients" aria-label="Search clients" aria-describedby="button-search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit" id="button-search">Search</button>
+                </div>
+            </form>
+        </div>
     </div>
     {% if client_list %}
         <table id="clientTable" class="tablesorter">

@@ -49,15 +49,6 @@
                 <ul class="list-unstyled components">
                     <p class="sideheader"><i class="fas fa-address-card"></i> Clients & Projects</p>
 
-                    <!-- Search Section -->
-                    <div class="search">
-                        <form action="{% url 'rolodex:clients' %}" method="GET">
-                            <span class="fa fa-search"></span>
-                            <input type="text" name="client_search" placeholder="Search clients">
-                            <input type="submit" style="display: none" />
-                        </form>
-                    </div>
-
                     <!-- Menu Section -->
                     <li>
                         <a href="#clientSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" data-target="#clientSubmenu">
@@ -82,15 +73,6 @@
                 <ul class="list-unstyled components">
                     <p class="sideheader"><i class="fas fa-pencil-alt"></i> Findings & Reports</p>
 
-                    <!-- Search Section -->
-                    <div class="search">
-                        <form action="{% url 'reporting:findings' %}" method="GET">
-                            <span class="fa fa-search"></span>
-                            <input type="text" name="finding_search" placeholder="Search findings">
-                            <input type="submit" style="display: none" />
-                        </form>
-                    </div>
-
                     <!-- Menu Section -->
                     <li>
                         <a href="#findingsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Findings</a>
@@ -110,15 +92,6 @@
                 <!-- Shepherd Section -->
                 <ul class="list-unstyled components">
                     <p class="sideheader"><i class="fas fa-server"></i> Infrastructure</p>
-
-                    <!-- Search Section -->
-                    <div class="search">
-                        <form action="{% url 'shepherd:domains' %}" method="GET">
-                            <span class="fa fa-search"></span>
-                            <input type="text" name="domain_search" placeholder="Search domains">
-                            <input type="submit" style="display: none" />
-                        </form>
-                    </div>
 
                     <!-- Menu Section -->
                     {% if user.is_authenticated %}
@@ -181,12 +154,12 @@
             <div id="content">
                 {% if user.is_authenticated %}
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn" title="Toggle sidebar menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                    </button>
                     <div class="container-fluid">
-                        <button type="button" id="sidebarCollapse" class="navbar-btn" title="Toggle sidebar menu">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </button>
                         <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fas fa-align-justify"></i>
                         </button>
@@ -255,7 +228,7 @@
                                 </span>
                             </div>
                         {% endif %}
-                    {% endblock %} 
+                    {% endblock %}
                 </div>
             </div>
         </div>
@@ -274,7 +247,7 @@
         <script>
             var coll = document.getElementsByClassName("collapsible");
             var i;
-            
+
             for (i = 0; i < coll.length; i++) {
                 coll[i].addEventListener("click", function() {
                 this.classList.toggle("active");
@@ -283,7 +256,7 @@
                     content.style.maxHeight = null;
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
-                } 
+                }
                 });
             }
         </script>
