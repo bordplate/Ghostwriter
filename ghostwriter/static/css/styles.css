@@ -164,7 +164,7 @@ input[type="file"] {
 
 .search input { text-indent: 45px;}
 
-.search .fa-search {
+.search .fa-search { 
     position: absolute;
     top: 10px;
     left: 12.5%;
@@ -307,22 +307,19 @@ a.article, a.article:hover {
 }
 
 #sidebarCollapse span:first-of-type {
-    transform: rotate(-45deg) translate(2px, -4px);
-    width: 15px;
+    transform: rotate(45deg) translate(2px, 2px);
 }
 #sidebarCollapse span:nth-of-type(2) {
     opacity: 0;
 }
 #sidebarCollapse span:last-of-type {
-    transform: rotate(45deg) translate(1px, 2px);
-    width: 15px;
+    transform: rotate(-45deg) translate(1px, -1px);
 }
 
 #sidebarCollapse.active span {
     transform: none;
     opacity: 1;
     margin: 5px auto;
-    width: 20px;
 }
 
 h1 {
