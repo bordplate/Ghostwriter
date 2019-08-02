@@ -54,58 +54,76 @@
         {% endif %}
 
         <!-- Operators Section -->
-        <button class="collapsible"><i class="fas fa-user-plus"></i> Operators ( {{ project.projectassignment_set.all.count }} )</button>
-        <div class="collapsiblecontent">
-            <div class="collapsiblecontent_inner">
-                <p><a href="{% url 'rolodex:assign_operator' project.id %}"><i class="far fa-plus-square"></i> Assign an Operator</a></p>
-                {% if project.projectassignment_set.all %}
-                    <table>
-                        <tr>
-                            <th>Operator</th>
-                            <th>Role</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Note</th>
-                            <th style="text-align: center;">Options</th>
-                        </tr>
-                        {% for operator in project.projectassignment_set.all %}
-                            <tr>
-                                <td>{{ operator.operator.name }}</td>
-                                <td>{{ operator.role }}</td>
-                                {% if operator.start_date %}
-                                    <td>{{ operator.start_date }}</td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
-                                {% if operator.end_date %}
-                                    <td>{{ operator.end_date }}</td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
+        <div class="accordion" id="administrativeAccordion">
+            <div class="card">
+                <div class="card-header" id="administrativeHeader">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#operatorsContent" aria-expanded="true" aria-controls="operatorsContent">
+                            <i class="fas fa-user-plus"></i> Operators <span class="badge badge-secondary">{{ project.projectassignment_set.all.count }}</span>
+                        </button>
+                    </h2>
+                </div>
 
-                                <td style="text-align: justify">{{ operator.note|linebreaksbr }}</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="dropbtn far fa-caret-square-down"></button>
-                                        <div id="myDropdown" class="dropdown-content" {% if forloop.last %} style="bottom: 100%;"{% endif %}>
-                                            <a href="{% url 'rolodex:assignment_edit' operator.id %}"><i class="far fa-edit"></i> Edit Assignment</a>
-                                            <a href="{% url 'rolodex:assignment_delete' operator.id %}"><i style="color: red;" class="far fa-minus-square"></i> Unassign</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p>No operators have been assigned to this project yet.</p>
-                {% endif %}
+                <div id="operatorsContent" class="collapse" aria-labelledby="administrativeHeader" data-parent="#administrativeAccordion">
+                    <div class="card-body">
+                        <p><a href="{% url 'rolodex:assign_operator' project.id %}"><i class="far fa-plus-square"></i> Assign an Operator</a></p>
+                        {% if project.projectassignment_set.all %}
+                            <table>
+                                <tr>
+                                    <th>Operator</th>
+                                    <th>Role</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Note</th>
+                                    <th style="text-align: center;">Options</th>
+                                </tr>
+                                {% for operator in project.projectassignment_set.all %}
+                                    <tr>
+                                        <td>{{ operator.operator.name }}</td>
+                                        <td>{{ operator.role }}</td>
+                                        {% if operator.start_date %}
+                                            <td>{{ operator.start_date }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        {% if operator.end_date %}
+                                            <td>{{ operator.end_date }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+
+                                        <td style="text-align: justify">{{ operator.note|linebreaksbr }}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="dropbtn far fa-caret-square-down"></button>
+                                                <div id="myDropdown" class="dropdown-content" {% if forloop.last %} style="bottom: 100%;"{% endif %}>
+                                                    <a href="{% url 'rolodex:assignment_edit' operator.id %}"><i class="far fa-edit"></i> Edit Assignment</a>
+                                                    <a href="{% url 'rolodex:assignment_delete' operator.id %}"><i style="color: red;" class="far fa-minus-square"></i> Unassign</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <p>No operators have been assigned to this project yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-        </div>
 
         <!-- Infrastructure Section -->
-        <button class="collapsible"><i class="fas fa-server"></i> Infrastructure Used</button>
-        <div class="collapsiblecontent">
-            <div class="collapsiblecontent_inner">
+       <div class="card">
+            <div class="card-header" id="infrastructureUsedHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#infrastructureUsedContent" aria-expanded="false" aria-controls="operatorsContent">
+                        <i class="fas fa-server"></i> Infrastructure Used
+                    </button>
+                </h2>
+            </div>
+
+            <div id="infrastructureUsedContent" class="collapse" aria-labelledby="infrastructureUsedHeader" data-parent="#administrativeAccordion">
+                <div class="card-body">
                 <!-- Domain Section -->
                 <h4>Domains</h4>
 
@@ -114,7 +132,7 @@
                     <form action="{% url 'shepherd:domains' %}" method="GET">
                         <span class="fa fa-search"></span>
                         <input type="text" name="domain_search" placeholder="Search domains">
-                        <input type="submit" style="display: none;" /> 
+                        <input type="submit" style="display: none;" />
                     </form>
                 </div>
 
@@ -262,11 +280,20 @@
                 {% endif %}
             </div>
         </div>
+       </div>
 
         <!-- Findings Section -->
-        <button class="collapsible"><i class="fab fa-searchengin"></i> Findings</button>
-        <div class="collapsiblecontent">
-            <div class="collapsiblecontent_inner">
+        <div class="card">
+            <div class="card-header" id="findingsHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#findingsContent" aria-expanded="true" aria-controls="findingsContent">
+                        <i class="fab fa-searchengin"></i> Findings
+                    </button>
+                </h2>
+            </div>
+
+            <div id="findingsContent" class="collapse" aria-labelledby="findingsHeader" data-parent="#administrativeAccordion">
+                <div class="card-body">
                 {% if project.report_set.all %}
                     {% for report in project.report_set.all %}
                         {% if report.reportfindinglink_set.all %}
@@ -295,7 +322,7 @@
                                             <td style="color: #A8D08D;"><strong>You</strong></td>
                                         {% else %}
                                             <td style="color: #FF7E79;"><strong>You</strong></td>
-                                        {% endif %} 
+                                        {% endif %}
                                         {% else %}
                                             <td style="color: #7a7a7a;"><strong>{{ finding.assigned_to }}</strong></td>
                                         {% endif %}
@@ -316,11 +343,20 @@
                 {% endif %}
             </div>
         </div>
+        </div>
 
         <!-- Reports Section -->
-        <button class="collapsible"><i class="fas fa-book"></i> Reports ( {{ project.report_set.all.count }} )</button>
-        <div class="collapsiblecontent">
-            <div class="collapsiblecontent_inner">
+        <div class="card">
+            <div class="card-header" id="reportsHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#reportsContent" aria-expanded="true" aria-controls="reportsContent">
+                        <i class="fas fa-book"></i> Reports <span class="badge badge-secondary">{{ project.report_set.all.count }}</span>
+                    </button>
+                </h2>
+            </div>
+
+            <div id="reportsContent" class="collapse" aria-labelledby="reportsHeader" data-parent="#administrativeAccordion">
+                <div class="card-body">
                 {% if project.complete %}
                     <p>The project is marked as complete so no additional reports may be created.</p>
                 {% else %}
@@ -365,12 +401,22 @@
                     <p>No reports have been created for this project yet.</p>
                 {% endif %}
             </div>
+            </div>
         </div>
 
+
         <!-- Additional Information Section -->
-        <button class="collapsible"><i class="fas fa-comments"></i> Notes ( {{ project.projectnote_set.all.count }} )</button>
-        <div class="collapsiblecontent">
-            <div class="collapsiblecontent_inner">
+        <div class="card">
+            <div class="card-header" id="notesHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#notesContent" aria-expanded="true" aria-controls="notesContent">
+                        <i class="fas fa-comments"></i> Notes <span class="badge badge-secondary">{{ project.projectnote_set.all.count }}</span>
+                    </button>
+                </h2>
+            </div>
+
+            <div id="notesContent" class="collapse" aria-labelledby="notesHeader" data-parent="#administrativeAccordion">
+                <div class="card-body">
                 <p>
                     <a href="{% url 'rolodex:project_note_add' project.id %}"><i class="far fa-plus-square"></i> Add a Note</a>
                 </p>
@@ -396,6 +442,8 @@
                     <p>No notes for this project.</p>
                 {% endif %}
             </div>
+        </div>
+    </div>
         </div>
     </div>
 {% endblock %}
