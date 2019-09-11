@@ -22,6 +22,8 @@ urlpatterns = [
     path('user/active_assets', views.user_assets, name='user_assets'),
     path('ajax/load_projects/', views.ajax_load_projects,
          name='ajax_load_projects'),
+    path('ajax/load_project/', views.ajax_load_project,
+         name='ajax_load_project'),
 ]
 
 # URLs for domain status change functions
@@ -118,4 +120,6 @@ urlpatterns += [
     path('update_dns/', views.update_dns, name='update_dns'),
     path('update_dns/<int:pk>/', views.update_dns_single,
          name='update_dns_single'),
+    path('update_namecheap/', views.pull_domains_namecheap,
+         name='update_namecheap'),
 ]

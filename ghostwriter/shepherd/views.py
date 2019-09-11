@@ -11,13 +11,14 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core import serializers
 
 # Django imports for verifying a user is logged-in to access a view
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Django imports for forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 
 # Django Q imports for task management
@@ -125,6 +126,15 @@ def ajax_load_projects(request):
         'shepherd/project_dropdown_list.html',
         {'projects': projects})
 
+@login_required
+def ajax_load_project(request):
+    """View function used with AJAX for retrieving project details.
+    Used in checkout forms to set the default checkout date.
+    """
+    project_id = request.GET.get('project')
+    project = Project.objects.filter(id=project_id)
+    data = serializers.serialize('json', project)
+    return HttpResponse(data, content_type='application/json')
 
 @login_required
 def domain_release(request, pk):
@@ -462,6 +472,10 @@ def import_servers(request):
             # NULL if not
             if 'note' not in entry:
                 entry['note'] = None
+            # Check if the optional name field is in the csv and add it as
+            # NULL if not
+            if 'name' not in entry:
+                entry['name'] = None
             # Check if the server_status Foreign Key is in the csv and try to
             # resolve the status
             if 'server_status' in entry:
@@ -581,6 +595,23 @@ def update(request):
             dns_last_update_completed = ''
             dns_last_update_time = ''
             dns_last_result = ''
+        # Collect data for Namecheap updates
+        enable_namecheap = settings.NAMECHEAP_CONFIG['enable_namecheap']
+        try:
+            queryset = Task.objects.filter(group='Namecheap Update')[0]
+            namecheap_last_update_requested = queryset.started
+            namecheap_last_result = queryset.result
+            if queryset.success:
+                namecheap_last_update_completed = queryset.stopped
+                namecheap_last_update_time = round(queryset.time_taken() / 60, 2)
+            else:
+                namecheap_last_update_completed = 'Failed'
+                namecheap_last_update_time = ''
+        except Exception:
+            namecheap_last_update_requested = 'A Namecheap Update Has Not Been Run Yet'
+            namecheap_last_update_completed = ''
+            namecheap_last_update_time = ''
+            namecheap_last_result = ''
         # Assemble context for the page
         context = {
                     'total_domains': total_domains,
@@ -593,7 +624,12 @@ def update(request):
                     'dns_last_update_requested': dns_last_update_requested,
                     'dns_last_update_completed': dns_last_update_completed,
                     'dns_last_update_time': dns_last_update_time,
-                    'dns_last_result': dns_last_result
+                    'dns_last_result': dns_last_result,
+                    'enable_namecheap': enable_namecheap,
+                    'namecheap_last_update_requested': namecheap_last_update_requested,
+                    'namecheap_last_update_completed': namecheap_last_update_completed,
+                    'namecheap_last_update_time': namecheap_last_update_time,
+                    'namecheap_last_result': namecheap_last_result
                 }
         return render(request, 'shepherd/update.html', context=context)
     else:
@@ -687,7 +723,7 @@ def update_dns(request):
                 hook='ghostwriter.shepherd.tasks.send_slack_complete_msg')
             messages.success(
                 request,
-                'DNS update task (Task ID) has been successfully queued.'.
+                'DNS update task (Task ID {}) has been successfully queued.'.
                 format(task_id),
                 extra_tags='alert-success')
         except Exception:
@@ -715,7 +751,7 @@ def update_dns_single(request, pk):
                 hook='ghostwriter.shepherd.tasks.send_slack_complete_msg')
             messages.success(
                 request,
-                'DNS update task (Task ID) has been successfully queued. '
+                'DNS update task (Task ID {}) has been successfully queued. '
                 'Refresh this page in a minute or two.'.format(task_id),
                 extra_tags='alert-success')
         except Exception:
@@ -725,6 +761,32 @@ def update_dns_single(request, pk):
                 'running?',
                 extra_tags='alert-danger')
     return HttpResponseRedirect(reverse('shepherd:domain_detail', kwargs={'pk': pk}))
+
+
+@login_required
+def pull_domains_namecheap(request):
+    """View function to schedule a background task to update the domain
+    library from Namecheap.
+    """
+    # Check if the request is a POST and proceed with the task
+    if request.method == 'POST':
+        # Add an async task grouped as `Namecheap Update`
+        try:
+            task_id = async_task(
+                'ghostwriter.shepherd.tasks.fetch_namecheap_domains',
+                group='Namecheap Update')
+            messages.success(
+                request,
+                'Namecheap update task (Task ID {}) has been successfully queued.'.
+                format(task_id),
+                extra_tags='alert-success')
+        except Exception:
+            messages.error(
+                request,
+                'Namecheap update task could not be queued. '
+                'Is the AMQP server running?',
+                extra_tags='alert-danger')
+    return HttpResponseRedirect(reverse('shepherd:update'))
 
 
 ################

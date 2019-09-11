@@ -3,6 +3,17 @@
 
 {% block pagetitle %}Domain Check-out{% endblock %}
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb" style="padding-left: 20px;">
+        <ul class="breadcrumb" style="margin: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home:dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shepherd:domains' %}">Domains</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shepherd:domain_detail' form.domain.value %}">{{ domain_name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ul>
+    </nav>
+{% endblock %}
+
 {% block content %}
     <p>Complete this form and then click Save to checkout {{ domain_name }}:</p>
 
@@ -26,7 +37,10 @@
     {% endif %}
 
     <!-- Form Section -->
-    <form class="newitem" action="" method="post" id="checkoutForm" data-projects-url="{% url 'shepherd:ajax_load_projects' %}">
+    <form class="newitem" action="" method="post" id="checkoutForm"
+      data-projects-url="{% url 'shepherd:ajax_load_projects' %}"
+      data-project-url="{% url 'shepherd:ajax_load_project' %}"
+    >
         {% csrf_token %}
 
         <!-- Client Info Section -->
@@ -38,7 +52,7 @@
         <!-- Spacer -->
         <p style="margin: 40px;"></p>
 
-        <!-- Project Section -->            
+        <!-- Project Section -->
         <strong><i class="fas fa-tasks"></i> Usage Information</strong>
         <hr>
 
@@ -69,7 +83,8 @@
         {{ form.domain }}
         {{ form.operator }}
 
-        <input type="submit" class="button" value="Save">
+        <input type="submit" class="btn btn-primary" value="Save">
+        <button onclick="window.history.back();" class="btn btn-secondary" type="button">Cancel</button>
     </form>
 {% endblock %}
 
@@ -97,5 +112,26 @@
                 }
             });
         });
+    </script>
+
+    <!-- Script to set the default dates -->
+    <script>
+      $("#id_project").change(function () {
+        var url = $("#checkoutForm").attr("data-project-url");
+        var projectId = $(this).val();
+        $.ajax({
+            url: url,
+            data: {
+                'project': projectId
+            },
+            success: function (data) {
+                if(data.length > 0) {
+                  project = data[0]['fields'];
+                  $("#id_start_date")[0].value = project['start_date'];
+                  $("#id_end_date")[0].value = project['end_date'];
+                }
+            }
+        });
+      });
     </script>
 {% endblock %}

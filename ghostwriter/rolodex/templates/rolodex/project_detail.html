@@ -2,6 +2,16 @@
 
 {% block pagetitle %}{{ project.client }} {{ project.project_type }} Details{% endblock %}
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb" style="padding-left: 20px;">
+        <ul class="breadcrumb" style="margin: 0;">
+            <li class="breadcrumb-item"><a href="{% url 'home:dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'rolodex:client_detail' project.client.id %}">{{ project.client }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Project {{ project.id }}</li>
+        </ul>
+    </nav>
+{% endblock %}
+
 {% block content %}
     <h2>
         {{ project.client }} {{ project.project_type }} ({{ project.start_date }})
@@ -58,6 +68,8 @@
             <p>No additional information provided for this project.</p>
         {% endif %}
 
+
+    <div id="accordion" class="myaccordion">
         <!-- Operators Section -->
         <div class="accordion" id="administrativeAccordion">
             <div class="card">
@@ -70,6 +82,10 @@
                         </button>
                     </h2>
                 </div>
+                <div id="collapseInfra" class="collapse" aria-labelledby="infra" data-parent="#accordion">
+                    <div class="card-body">
+                        <!-- Domain Section -->
+                        <h4 style="margin-bottom: 40px;">Domains</h4>
 
                 <div id="operatorsContent" class="collapse" aria-labelledby="administrativeHeader"
                      data-parent="#administrativeAccordion">
@@ -136,6 +152,8 @@
                         </button>
                     </h2>
                 </div>
+            </div>
+        </div>
 
                 <div id="infrastructureUsedContent" class="collapse" aria-labelledby="infrastructureUsedHeader"
                      data-parent="#administrativeAccordion">
